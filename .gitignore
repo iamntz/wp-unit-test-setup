@@ -1,0 +1,4 @@
+/wp-tests
+/vendor
+/.phpunit.result.cache
+/composer.lock

@@ -1,0 +1,19 @@
+{
+    "require": {},
+    "require-dev": {
+        "szepeviktor/phpstan-wordpress": "^1.1",
+        "phpstan/extension-installer": "^1.1",
+        "phpunit/phpunit": "^9.5",
+        "yoast/phpunit-polyfills": "^1.0",
+        "brain/monkey": "2.*"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "test-php": "vendor/bin/phpunit --bootstrap bootstrap.php -c phpunit.xml",
+        "test-wp": "vendor/bin/phpunit --bootstrap bootstrap-wp.php -c phpunit-wp.xml"
+    }
+}
