@@ -5,7 +5,10 @@
         "phpstan/extension-installer": "^1.1",
         "phpunit/phpunit": "^9.5",
         "yoast/phpunit-polyfills": "^1.0",
-        "brain/monkey": "2.*"
+        "brain/monkey": "2.*",
+        "php-mock/php-mock": "^2.3",
+        "php-mock/php-mock-phpunit": "^2.6",
+        "php-mock/php-mock-prophecy": "^0.1.0"
     },
     "config": {
         "allow-plugins": {
