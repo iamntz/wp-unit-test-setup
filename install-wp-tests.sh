@@ -3,6 +3,8 @@
 WP_TEST_PATH='./wp-tests'
 
 TMPDIR=${WP_TEST_PATH/tmp}
+WP_TESTS_DIR="$TMPDIR/tests/wordpress-tests-lib"
+WP_CORE_DIR="$TMPDIR/core/wordpress"
 
 mkdir -p $WP_TEST_PATH
 mkdir -p $TMPDIR
@@ -11,37 +13,49 @@ current_dir=${PWD##*/}
 unique_volume_id=$(openssl rand -hex 10)
 unique_volume_id="vol_$unique_volume_id"
 
-echo 'If you just re-install it, run this instead:'
-echo './install-wp-tests.sh DB_HOST:DB_PORT'
-
-DB_HOST="${1-localhost:3306}"
+DB_HOST="localhost:DOCKER_DB_PORT"
 DB_NAME='wp_test'
 DB_USER='wp'
 DB_PASS='wp'
 WP_VERSION='latest'
-SKIP_DB_CREATE=${true}
+FIRST_TIME_RUN='yes'
 
-if [[ -z $4 ]]; then
-	read -r -p "First time here? [Y/n]" response
+get_random_free_port() {
+    free_random_port_found='0'
+    while [ $free_random_port_found == '0' ]
+    do
+        RANDOM_PORT=$(( ((RANDOM<<15)|RANDOM) % 49152 + 10000 ))
+        status="$(nc -z 127.0.0.1 $RANDOM_PORT < /dev/null &>/dev/null; echo $?)"
+        if [ "${status}" != "0" ]; then
+            free_random_port_found='1'
+        fi
+    done
 
-	if [[ $response =~ ^(y| ) ]] || [[ -z $response ]]; then
-		read -p "Docker project name: " -e -i "$current_dir" docker_project_name
-		docker_project_name=$(echo $docker_project_name | sed -E 's/[^[:alnum:]]+/_/g')
-		sed -i "s/DOCKER_PROJECT_NAME/$docker_project_name/" docker-compose.yml
-		sed -i "s/DOCKER_DB_NAME/$docker_project_name/" docker-compose.yml
+    echo $RANDOM_PORT
+}
 
-		read -p "Docker DB port: " -e -i '34065' db_port
-		sed -i "s/DOCKER_DB_PORT/$db_port/" docker-compose.yml
-		sed -i "s/DOCKER_DB_VOLUME_NAME/$unique_volume_id/" docker-compose.yml
-		DB_HOST="$localhost:$db_port"
-	fi
+if [[ $FIRST_TIME_RUN == 'yes' ]]; then
+  RANDOM_PORT=$(get_random_free_port)
+
+  read -p "Docker project name: " -e -i "$current_dir" docker_project_name
+  docker_project_name=$(echo $docker_project_name | sed -E 's/[^[:alnum:]]+/_/g')
+
+  sed -i "s/DOCKER_PROJECT_NAME/$docker_project_name/" docker-compose.yml
+  sed -i "s/DOCKER_DB_NAME/$docker_project_name/" docker-compose.yml
+
+  read -p "Docker DB port: " -e -i $RANDOM_PORT db_port
+
+  sed -i "s/DOCKER_DB_PORT/$db_port/" docker-compose.yml
+  sed -i "s/DOCKER_DB_PORT/$db_port/" install-wp-tests.sh
+
+  sed -i "s/DOCKER_DB_VOLUME_NAME/$unique_volume_id/" docker-compose.yml
+
+  sed -i "s/FIRST_TIME_RUN='no'/FIRST_TIME_RUN='no'/" install-wp-tests.sh
+
+  DB_HOST="$localhost:$db_port"
 fi
 
-
-
-
-WP_TESTS_DIR="$TMPDIR/tests/wordpress-tests-lib"
-WP_CORE_DIR="$TMPDIR/core/wordpress"
+read -r -p "Make sure you've ran 'docker-compose up -d' in a different console. Press Enter when done."
 
 download() {
     if [ `which curl` ]; then
