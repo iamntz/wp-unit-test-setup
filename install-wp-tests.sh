@@ -52,7 +52,7 @@ if [[ $FIRST_TIME_RUN == 'yes' ]]; then
 
   sed -i "s/FIRST_TIME_RUN='no'/FIRST_TIME_RUN='no'/" install-wp-tests.sh
 
-  DB_HOST="$localhost:$db_port"
+  DB_HOST="localhost:$db_port"
 fi
 
 read -r -p "Make sure you've ran 'docker-compose up -d' in a different console. Press Enter when done."
