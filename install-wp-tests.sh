@@ -50,7 +50,7 @@ if [[ $FIRST_TIME_RUN == 'yes' ]]; then
 
   sed -i "s/DOCKER_DB_VOLUME_NAME/$unique_volume_id/" docker-compose.yml
 
-  sed -i "s/FIRST_TIME_RUN='no'/FIRST_TIME_RUN='no'/" install-wp-tests.sh
+  sed -i "s/FIRST_TIME_RUN='yes'/FIRST_TIME_RUN='no'/" install-wp-tests.sh
 
   DB_HOST="localhost:$db_port"
 fi
