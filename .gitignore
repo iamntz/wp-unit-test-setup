@@ -1,5 +1,9 @@
-/wp-tests
 /vendor
+/wp-tests/*
+!/wp-tests/tests/
+!/wp-tests/tests/wordpress-tests-lib/
+!/wp-tests/tests/wordpress-tests-lib/**
+/wp-tests/tests/wordpress-tests-lib/**
+!/wp-tests/tests/wordpress-tests-lib/wp-tests-config.php
 /.phpunit.result.cache
 /composer.lock
-/.idea/
