@@ -20,19 +20,11 @@ On your host machine, you'll need:
 
 After you download this repo archive and extract it as `your-project-path/tests`, you will do one of the following:
 
-#### 1. First time set-up (in bash/wsl):
+#### 1. Set-up (in bash/wsl):
 ```
 ./install-wp-tests.sh
 ```
-This will also update `docker-compose.yml` file, so any subsequent run will require you to install it with full command instead:
-
-#### 2. Reinstall (also in bash/wsl)
-```
-./install-wp-tests.sh localhost:DB_PORT
-# DB_PORT is the port used in `docker-compose.yml`
-```
-
-This will set-up docker file & paths.
+This will also update `docker-compose.yml` file and will set-up docker file & paths.
 
 #### Day-to-day use:
 
